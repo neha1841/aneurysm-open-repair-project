@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Aneurysm Hero — 7th Grade Learning Game</title>
+  <style>
+    :root{--bg:#f2f8ff;--card:#ffffff;--accent:#2b7cff;--muted:#6b7280}
+    html,body{height:100%;margin:0;font-family:'Poppins',system-ui,Arial,sans-serif;background:var(--bg)}
+    body{display:flex;align-items:center;justify-content:center;padding:20px}
+    .game{background:var(--card);width:960px;max-width:100%;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.08);overflow:hidden;display:grid;grid-template-columns:1fr 1fr}
+    .left,.right{padding:20px}
+    .title{font-size:22px;font-weight:700;color:#0f1724}
+    .subtitle{font-size:14px;color:var(--muted)}
+    .diagram{margin-top:16px;background:#eaf3ff;border-radius:10px;padding:16px;display:flex;align-items:center;justify-content:center;flex-direction:column}
+    .patient{width:160px;height:220px;background:#ffd6b3;border-radius:80px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .aneurysm{width:60px;height:30px;border-radius:30px;background:#ff9b9b;animation:pulse 2s infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+    button{background:var(--accent);color:white;border:none;border-radius:10px;padding:10px 14px;font-size:14px;font-weight:600;cursor:pointer;margin-top:10px}
+    button:hover{background:#1f5ed8}
+    .infoBox{background:#f6faff;padding:12px;border-radius:8px;margin-top:10px;font-size:14px;color:#0f1724}
+    .purpose{background:#f0fff4;border:1px solid #b4f0c2;color:#03643a;padding:10px;border-radius:8px;margin-top:8px;font-size:14px}
+    .step-list{margin-top:12px}
+    .step{padding:8px;background:#f9fbff;border-radius:8px;margin-bottom:6px;border:1px solid #e1e8f8}
+    .highlight{background:#e0ecff}
+    @media (max-width:900px){.game{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="game">
+    <div class="left">
+      <div class="title">Aneurysm Hero 🫀</div>
+      <div class="subtitle">Learn how doctors fix a bulge in a blood vessel safely — step by step!</div>
+      <div class="diagram">
+        <div class="patient">
+          <div class="aneurysm" id="aneurysm"></div>
+        </div>
+        <button id="nextBtn">Start Surgery</button>
+      </div>
+    </div>
+
+    <div class="right">
+      <div id="info" class="infoBox">Welcome, young surgeon! In this game, you’ll learn what happens during an <b>open aneurysm repair</b>. Each step will tell you what doctors do and why — no real images, just learning fun!</div>
+      <div id="purpose" class="purpose" style="display:none"></div>
+      <div class="step-list" id="steps"></div>
+    </div>
+  </div>
+
+  <script>
+    const steps = [
+      {title:'1️⃣ Prepare the Patient',explain:'Doctors get ready by cleaning the area, checking the patient’s heart and blood pressure, and giving anesthesia so they don’t feel pain.',purpose:'Keep the surgery area clean and the patient comfortable and safe.'},
+      {title:'2️⃣ Make the Incision',explain:'A gentle cut is made in the stomach area to reach the blood vessel. Don’t worry — our game just shows a cartoon version!',purpose:'To reach the aorta (the main artery) where the aneurysm is located.'},
+      {title:'3️⃣ Find the Aneurysm',explain:'The doctor carefully moves tissues aside to find the swollen part of the artery.',purpose:'To clearly see the bulge that needs fixing.'},
+      {title:'4️⃣ Stop Blood Flow for Safety',explain:'Clamps are used above and below the aneurysm to stop blood from rushing through while the repair is happening.',purpose:'Prevent bleeding during the repair.'},
+      {title:'5️⃣ Open the Aneurysm',explain:'The doctor opens the bulge to see inside (in real life they might remove clots, but we’ll keep it simple!).',purpose:'So the doctor can look at the damaged area.'},
+      {title:'6️⃣ Place the Graft',explain:'A strong plastic tube called a graft is sewn inside the artery to take over the job of the weak part.',purpose:'Make the artery strong again so it doesn’t burst.'},
+      {title:'7️⃣ Close Everything Up',explain:'The clamps come off slowly, and blood starts flowing normally again. Then, the doctor closes the cut with stitches.',purpose:'Finish the surgery and help the body heal.'},
+      {title:'✅ Recovery Time!',explain:'The patient rests in the hospital while doctors watch their blood pressure and healing progress.',purpose:'Make sure everything is working perfectly after the surgery!'}
+    ];
+
+    let current = -1;
+    const info = document.getElementById('info');
+    const purposeBox = document.getElementById('purpose');
+    const nextBtn = document.getElementById('nextBtn');
+    const stepsList = document.getElementById('steps');
+
+    function showStep(){
+      current++;
+      if(current>=steps.length){
+        info.innerHTML = '<b>All done!</b> 🎉 You successfully learned every step of an aneurysm repair!';
+        purposeBox.style.display='none';
+        nextBtn.textContent='Play Again';
+        current=-1;
+        return;
+      }
+      const s = steps[current];
+      info.innerHTML = `<b>${s.title}</b><br>${s.explain}`;
+      purposeBox.style.display='block';
+      purposeBox.innerHTML = `<b>Purpose:</b> ${s.purpose}`;
+      document.querySelectorAll('.step').forEach(e=>e.classList.remove('highlight'));
+      document.getElementById('step-'+current)?.classList.add('highlight');
+      nextBtn.textContent = current===steps.length-1 ? 'Finish' : 'Next';
+    }
+
+    steps.forEach((s,i)=>{
+      const div = document.createElement('div');
+      div.className='step';
+      div.id='step-'+i;
+      div.textContent=s.title;
+      stepsList.appendChild(div);
+    });
+
+    nextBtn.addEventListener('click',showStep);
+  </script>
+</body>
+</html>
